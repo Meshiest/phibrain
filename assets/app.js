@@ -163,13 +163,15 @@ function gameSetup(width, height, flipped) {
 
   console.log(flipped);
 
+  const cellSize = 60;
+
   cellStyle.innerHTML = `
   .grid {
-    grid-template-columns: repeat(${width}, 60px);
-    grid-template-rows: repeat(${height}, 60px);
+    grid-template-columns: repeat(${width}, ${cellSize}px);
+    grid-template-rows: repeat(${height}, ${cellSize}px);
   }
   .cell {
-    background-size: 1920px 1080px;
+    background-size: ${cellSize * width}px ${cellSize * height}px;
     background-image: url(${flipped ? sideA : sideB});
   }
   .cell.flipped {
