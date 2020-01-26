@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phi Brain</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</head>
+<body>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation;
+
+}
+
+.grid {
+  display: grid;
+}
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background-color: #0f0;
+}
+
+.cell {
+  background-repeat: no-repeat;
+  transition: transform .1s ease;
+}
+
+.cell.focused {
+  border: 2px solid white;
+  transform: scale(1.2);
+}
+</style>
+<style id="cellSetup"></style>
+<div class="grid"></div>
+<div class="progress"></div>
+</body>
+</html>
