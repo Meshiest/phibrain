@@ -21,7 +21,8 @@ let flipCount = 0;
 
 io.on('connection', socket => {
   const id = _.uniqueId('user');
-  const shouldFlip = userCount > 0 && flipCount / userCount <= 0.5;
+  const ratio = flipCount / userCount;
+  const shouldFlip = userCount > 0 && ratio === 0.5 || Math.random() < 0.5;
   if (shouldFlip)
     flipCount++;
   userCount++;
