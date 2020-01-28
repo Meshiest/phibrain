@@ -17,7 +17,7 @@ The source code is available here:
 The code below automatically solves the puzzle.
 If you're interested in writing your own, please ignore this code and make your attempt first!
 
-(f=()=>{c=$('.cell:not(.set)');if(!c)return;socket.emit('swap',indexFromCell(c),posToIndex(parsePos(c.getAttribute('real'))));socket.emit('flip',indexFromCell(c),0);setTimeout(f,100)})();
+(f=()=>{c=$('.cell:not(.set)');if(!c)return;socket.emit('flip',indexFromCell(c),0);socket.emit('swap',indexFromCell(c),posToIndex(parsePos(c.getAttribute('real'))));setTimeout(f,100)})();
 
 See /app.js for some documented helper functions if you're interested in writing your own bots!
 
@@ -25,7 +25,9 @@ See /app.js for some documented helper functions if you're interested in writing
 <style id="cellSetup"></style>
 <div class="grid"></div>
 <div class="info">
-  <div class="preview"></div>
+  <div class="preview-container">
+    <div class="preview"></div>
+  </div>
   <div class="info-table">
     <h1>Phi Brain</h1>
     <div class="lobby">#dev1</div>
@@ -34,6 +36,7 @@ See /app.js for some documented helper functions if you're interested in writing
       <tr><td>Progress</td><td id="progressInfo"></td></tr>
       <tr><td>Helpers</td><td id="helpers"></td></tr>
       <tr><td>Side</td><td id="side"></td></tr>
+      <tr><td>Moves</td><td id="moves"></td></tr>
     </table>
     <div>
       <h3>Keys</h3>

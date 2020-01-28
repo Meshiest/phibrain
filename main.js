@@ -8,8 +8,20 @@ const _ = require('lodash');
 
 const WIDTH = 32;
 const HEIGHT = 18;
-const NUM_SIDES = 6;
+
+// this set is made up of multiple photos that complement useless space
 const SIDES = [
+  'https://w.wallhaven.cc/full/dg/wallhaven-dgw5mo.png',
+  'https://w.wallhaven.cc/full/qd/wallhaven-qdgr95.jpg',
+  'https://w.wallhaven.cc/full/47/wallhaven-476z1v.jpg',
+  'https://w.wallhaven.cc/full/ne/wallhaven-ne829w.jpg',
+  'https://w.wallhaven.cc/full/0p/wallhaven-0py6ep.jpg',
+  'https://w.wallhaven.cc/full/4y/wallhaven-4ymgyk.jpg',
+  'https://w.wallhaven.cc/full/0j/wallhaven-0j8q7w.png',
+];
+
+// older puzzles, worse quality images
+const SIDES_old_1 = [
   'https://w.wallhaven.cc/full/4x/wallhaven-4xll3v.jpg',
   'https://w.wallhaven.cc/full/4y/wallhaven-4yj6vl.jpg',
   'https://w.wallhaven.cc/full/4o/wallhaven-4opovm.jpg',
@@ -17,6 +29,8 @@ const SIDES = [
   'https://w.wallhaven.cc/full/4y/wallhaven-4yj2lx.jpg',
   'https://w.wallhaven.cc/full/43/wallhaven-435oz3.jpg',
 ];
+
+const NUM_SIDES = SIDES.length;
 
 const gameState = _
   .chain(WIDTH * HEIGHT)
@@ -26,10 +40,12 @@ const gameState = _
   .value();
 
 let userCount = 0;
+let moves = 0;
 
 function emitInfo() {
   io.emit('info', {
     helpers: userCount,
+    moves,
   });
 }
 
@@ -65,6 +81,8 @@ io.on('connection', socket => {
     gameState[pos][1] = side;
 
     io.emit('change', gameState[pos][0], pos, gameState[pos][1]);
+    moves++;
+    emitInfo();
   });
 
   // swap positions of two cells
@@ -80,6 +98,8 @@ io.on('connection', socket => {
 
     io.emit('change', gameState[a][0], a, gameState[a][1]);
     io.emit('change', gameState[b][0], b, gameState[b][1]);
+    moves++;
+    emitInfo();
   });
 
   socket.on('disconnect', () => {

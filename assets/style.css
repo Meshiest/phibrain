@@ -48,6 +48,17 @@ table.just tr td:first-child {
   background-color: #0f0;
 }
 
+.preview-container {
+  position: relative;
+}
+
+.preview {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transition: all 0.2s ease;
+}
+
 .cell {
   background-repeat: no-repeat;
   transition: transform .1s ease;

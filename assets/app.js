@@ -214,6 +214,7 @@ function checkSet(e) {
     if (!e.classList.contains('set'))
       playClickSound();
     e.classList.add('set');
+    e.classList.remove('focused');
 
     const numDone = document.querySelectorAll('.set').length;
     const numPieces = setup.width*setup.height;
@@ -326,6 +327,7 @@ function gameSetup(width, height, sides, side) {
 
   const cellSize = 60;
   const previewScale = 8;
+  const largeScale = 20;
 
   cellStyle.innerHTML = `
   .grid {
@@ -334,10 +336,19 @@ function gameSetup(width, height, sides, side) {
     grid-template-columns: repeat(${width}, ${cellSize}px);
     grid-template-rows: repeat(${height}, ${cellSize}px);
   }
+  .preview-container {
+    width: ${previewScale * width}px;
+    height: ${previewScale * height}px;
+  }
   .preview {
     width: ${previewScale * width}px;
     height: ${previewScale * height}px;
     background-size: ${previewScale * width}px ${previewScale * height}px;
+  }
+  .preview:hover {
+    width: ${largeScale * width}px;
+    height: ${largeScale * height}px;
+    background-size: ${largeScale * width}px ${largeScale * height}px;
   }
   .cell {
     background-size: ${cellSize * width}px ${cellSize * height}px;
@@ -366,6 +377,7 @@ function gameSetup(width, height, sides, side) {
 socket.on('setup', ({width, height, sides, side}) => gameSetup(width, height, sides, side));
 socket.on('info', info => {
   $('#helpers').innerText = info.helpers;
+  $('#moves').innerText = info.moves;
 });
 
 // load state into the game from the setup
