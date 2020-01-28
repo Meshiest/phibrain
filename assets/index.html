@@ -11,11 +11,42 @@ html, body {
   margin: 0;
   padding: 0;
   touch-action: manipulation;
+}
 
+.body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  display: flex;
 }
 
 .grid {
+  flex-shrink: 0;
   display: grid;
+  overflow: hidden;
+}
+
+table.keys tr td:first-child {
+  width: 0;
+  font-weight: bold;
+  text-align: center;
+}
+
+table td {
+  width: 100%;
+}
+
+table.just tr td:first-child {
+  width: 0;
+  font-weight: bold;
+  text-align: right;
+}
+
+.info-table {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
 }
 
 .progress {
@@ -35,9 +66,67 @@ html, body {
   border: 2px solid white;
   transform: scale(1.2);
 }
+
+h3 {
+  margin: 14px 0 4px 0;
+}
+
+.lobby {
+  font-family: monospace;
+  background-color: #ccc;
+  font-size: 20px;
+  width: 64px;
+  text-align: center;
+  align-self: center;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+h1 {
+  margin: 0;
+  text-align: center;
+}
+
+.set {
+  animation: glow 1s ease;
+}
+@keyframes glow {
+  to {
+    opacity: 1;
+    background-color: #4f4;
+  }
+  from {
+    opacity: 0;
+    background-color: #4f4;
+  }
+}
 </style>
 <style id="cellSetup"></style>
 <div class="grid"></div>
+<div class="info">
+  <div class="preview"></div>
+  <div class="info-table">
+    <h1>Phi Brain</h1>
+    <div class="lobby">#dev1</div>
+    <h3>Info</h3>
+    <table class="just">
+      <tr><td>Progress</td><td id="progressInfo"></td></tr>
+      <tr><td>Helpers</td><td id="helpers"></td></tr>
+      <tr><td>Side</td><td id="side"></td></tr>
+    </table>
+    <div>
+      <h3>Keys</h3>
+      <table class="keys">
+        <tr><td>X/Esc</td><td>Deselect Selected</td></tr>
+        <tr><td>WASD</td><td>Move Selected</td></tr>
+        <tr><td>Arrows</td><td>Move Cursor</td></tr>
+        <tr><td>F</td><td>Flip Selected<br/><i>(Shift reverses)</i></td></tr>
+        <tr><td>Space</td><td>Flip Side<br/><i>(Shift reverses)</i></td></tr>
+        <tr><td>Tab</td><td>Show Progress</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
 <div class="progress"></div>
 </body>
 </html>
