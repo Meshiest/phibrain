@@ -2,105 +2,26 @@
 <html>
 <head>
   <title>Phi Brain</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
   <script src="/socket.io/socket.io.js"></script>
   <script src="/app.js"></script>
 </head>
 <body>
-<style>
-html, body {
-  margin: 0;
-  padding: 0;
-  touch-action: manipulation;
-}
+<!--
 
-.body::-webkit-scrollbar {
-  display: none;
-}
+Hello! I see you are looking at the code!
 
-body {
-  display: flex;
-}
+The source code is available here:
+  https://github.com/Meshiest/phibrain
 
-.grid {
-  flex-shrink: 0;
-  display: grid;
-  overflow: hidden;
-}
+The code below automatically solves the puzzle.
+If you're interested in writing your own, please ignore this code and make your attempt first!
 
-table.keys tr td:first-child {
-  width: 0;
-  font-weight: bold;
-  text-align: center;
-}
+(f=()=>{c=$('.cell:not(.set)');if(!c)return;socket.emit('swap',indexFromCell(c),posToIndex(parsePos(c.getAttribute('real'))));socket.emit('flip',indexFromCell(c),0);setTimeout(f,100)})();
 
-table td {
-  width: 100%;
-}
+See /app.js for some documented helper functions if you're interested in writing your own bots!
 
-table.just tr td:first-child {
-  width: 0;
-  font-weight: bold;
-  text-align: right;
-}
-
-.info-table {
-  display: flex;
-  flex-direction: column;
-  padding: 14px;
-}
-
-.progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background-color: #0f0;
-}
-
-.cell {
-  background-repeat: no-repeat;
-  transition: transform .1s ease;
-}
-
-.cell.focused {
-  border: 2px solid white;
-  transform: scale(1.2);
-}
-
-h3 {
-  margin: 14px 0 4px 0;
-}
-
-.lobby {
-  font-family: monospace;
-  background-color: #ccc;
-  font-size: 20px;
-  width: 64px;
-  text-align: center;
-  align-self: center;
-  padding: 8px;
-  border-radius: 4px;
-}
-
-h1 {
-  margin: 0;
-  text-align: center;
-}
-
-.set {
-  animation: glow 1s ease;
-}
-@keyframes glow {
-  to {
-    opacity: 1;
-    background-color: #4f4;
-  }
-  from {
-    opacity: 0;
-    background-color: #4f4;
-  }
-}
-</style>
+-->
 <style id="cellSetup"></style>
 <div class="grid"></div>
 <div class="info">

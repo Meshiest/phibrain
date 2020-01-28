@@ -1,0 +1,93 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+.body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  display: flex;
+}
+
+.grid {
+  flex-shrink: 0;
+  display: grid;
+  overflow: hidden;
+}
+
+table.keys tr td:first-child {
+  width: 0;
+  font-weight: bold;
+  text-align: center;
+}
+
+table td {
+  width: 100%;
+}
+
+table.just tr td:first-child {
+  width: 0;
+  font-weight: bold;
+  text-align: right;
+}
+
+.info-table {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+}
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background-color: #0f0;
+}
+
+.cell {
+  background-repeat: no-repeat;
+  transition: transform .1s ease;
+}
+
+.cell.focused {
+  border: 2px solid white;
+  transform: scale(1.2);
+}
+
+h3 {
+  margin: 14px 0 4px 0;
+}
+
+.lobby {
+  font-family: monospace;
+  background-color: #ccc;
+  font-size: 20px;
+  width: 64px;
+  text-align: center;
+  align-self: center;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+h1 {
+  margin: 0;
+  text-align: center;
+}
+
+.set {
+  animation: glow 1s ease;
+}
+@keyframes glow {
+  to {
+    opacity: 1;
+    background-color: #4f4;
+  }
+  from {
+    opacity: 0;
+    background-color: #4f4;
+  }
+}
