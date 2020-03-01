@@ -18,6 +18,9 @@ function playClickSound() {
 }
 
 document.addEventListener('keyup', e => {
+  if ($('#chatInput').matches(':focus'))
+    return;
+
   let focused = $('.cell.focused');
 
   switch(e.code) {
@@ -30,6 +33,9 @@ document.addEventListener('keyup', e => {
 });
 
 document.addEventListener('keydown', e => {
+  if ($('#chatInput').matches(':focus'))
+    return;
+
   let focused = $('.cell.focused');
 
   if (focused) {
@@ -327,7 +333,7 @@ function gameSetup(width, height, sides, side) {
 
   const cellSize = 60;
   const previewScale = 8;
-  const largeScale = 20;
+  const largeScale = 30;
 
   cellStyle.innerHTML = `
   .grid {
@@ -392,4 +398,48 @@ socket.on('state', state => {
 // update a cell
 socket.on('change', (real, pos, side) => {
   setCellState(posFromIndex(real), posFromIndex(pos), side);
+});
+
+socket.on('chat', (id, chat) => {
+  const m = document.createElement('div');
+  const b = document.createElement('strong');
+  b.innerText = `<${id}> `;
+  const c = document.createElement('span');
+  c.innerText = chat;
+  m.appendChild(b);
+  m.appendChild(c);
+  $('.chat-child').appendChild(m);
+  $('.chat-child').scrollTop = $('.chat-child').scrollHeight;
+});
+
+socket.on('join', id => {
+  const m = document.createElement('div');
+  const b = document.createElement('strong');
+  b.innerText = `${id} `;
+  const c = document.createElement('span');
+  c.innerText = 'connected';
+  m.appendChild(b);
+  m.appendChild(c);
+  $('.chat-child').appendChild(m);
+  $('.chat-child').scrollTop = $('.chat-child').scrollHeight;
+});
+
+socket.on('drop', id => {
+  const m = document.createElement('div');
+  const b = document.createElement('strong');
+  b.innerText = `${id} `;
+  const c = document.createElement('span');
+  c.innerText = 'disconnected';
+  m.appendChild(b);
+  m.appendChild(c);
+  $('.chat-child').appendChild(m);
+  $('.chat-child').scrollTop = $('.chat-child').scrollHeight;
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  $('#chatForm').addEventListener('submit', e => {
+    e.preventDefault();
+    socket.emit('chat', e.target.msg.value);
+    e.target.msg.value = '';
+  });
 });

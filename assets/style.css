@@ -1,5 +1,5 @@
 html, body {
-  margin: 0;
+margin: 0;
   padding: 0;
   touch-action: manipulation;
 }
@@ -34,8 +34,14 @@ table.just tr td:first-child {
   text-align: right;
 }
 
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
 .info-table {
   display: flex;
+  flex: 1;
   flex-direction: column;
   padding: 14px;
 }
@@ -101,4 +107,28 @@ h1 {
     opacity: 0;
     background-color: #4f4;
   }
+}
+
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-parent {
+  flex: 1;
+  position: relative;
+}
+
+.chat-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.chat-child span {
+  word-break: break-all;
 }

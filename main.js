@@ -6,11 +6,32 @@ const path = require('path');
 const io = require('socket.io')(http);
 const _ = require('lodash');
 
-const WIDTH = 32;
-const HEIGHT = 18;
+const WIDTH_1080 = 32;
+const HEIGHT_1080 = 18;
+
+const WIDTH_2160 = 64;
+const HEIGHT_2160 = 36;
+
+const PIECE_SIZE = 60;
+
+/*const SIDES = [
+  '/puzzles/rainbow.png',
+];
+const [WIDTH, HEIGHT] = [2520/PIECE_SIZE, 1860/PIECE_SIZE];*/
+
+/*const SIDES = [
+  'https://w.wallhaven.cc/full/47/wallhaven-476z1v.jpg',
+];
+const [WIDTH, HEIGHT] = [1920/PIECE_SIZE, 1080/PIECE_SIZE];
+*/
+const SIDES = [
+  'https://w.wallhaven.cc/full/lq/wallhaven-lq9w5r.jpg',
+];
+const [WIDTH, HEIGHT] = [1920/PIECE_SIZE, 1200/PIECE_SIZE];
+
 
 // this set is made up of multiple photos that complement useless space
-const SIDES = [
+const SIDES_old_2 = [
   'https://w.wallhaven.cc/full/dg/wallhaven-dgw5mo.png',
   'https://w.wallhaven.cc/full/qd/wallhaven-qdgr95.jpg',
   'https://w.wallhaven.cc/full/47/wallhaven-476z1v.jpg',
@@ -62,9 +83,18 @@ io.on('connection', socket => {
     side: _.random(NUM_SIDES - 1),
   });
   socket.emit('state', gameState);
+  socket.broadcast.emit('join', id);
 
   // check if a position is in range
   const inRange = p => _.inRange(p % WIDTH, 0, WIDTH) && _.inRange(Math.floor(p / WIDTH), 0, HEIGHT);
+
+  socket.on('chat', msg => {
+    msg = msg.toString().trim();
+    if (msg.length === 0 || msg.length > 100)
+      return;
+    console.log(`<${id}> ${msg}`);
+    io.emit('chat', id, msg);
+  });
 
   // set flipped state of a cell
   socket.on('flip', (pos, side) => {
@@ -103,6 +133,7 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
+    socket.broadcast.emit('drop', id);
     userCount --;
     emitInfo();
     console.log('dropped user', id);
