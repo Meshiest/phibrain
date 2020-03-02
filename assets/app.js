@@ -83,10 +83,10 @@ document.addEventListener('keydown', e => {
   switch(e.code) {
   case 'Space':
     e.preventDefault();
-    $('.grid').setAttribute('side',
-      (Number($('.grid').getAttribute('side')) + (e.shiftKey ? setup.sides - 1 : 1)) % setup.sides,
+    $('.grid-container').setAttribute('side',
+      (Number($('.grid-container').getAttribute('side')) + (e.shiftKey ? setup.sides - 1 : 1)) % setup.sides,
     );
-    $('#side').innerText = (Number($('.grid').getAttribute('side')) + 1) + '/' + setup.sides;
+    $('#side').innerText = (Number($('.grid-container').getAttribute('side')) + 1) + '/' + setup.sides;
     break;
 
   // show complete pieces
@@ -214,6 +214,22 @@ document.addEventListener('click', e => {
   clickTime = now;
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  $('#zoomPlus').addEventListener('click', e => {
+    e.preventDefault();
+    setup.zoom = (setup.zoom || 100) % 100 + 10;
+    $('#zoom').innerText = setup.zoom + '%';
+    $('.grid-container').style.zoom = setup.zoom + '%';
+  });
+
+  $('#zoomMinus').addEventListener('click', e => {
+    e.preventDefault();
+    setup.zoom = ((setup.zoom || 100) + 80) % 100 + 10;
+    $('#zoom').innerText = setup.zoom + '%';
+    $('.grid-container').style.zoom = setup.zoom + '%';
+  })
+});
+
 // check if a cell is set
 function checkSet(e) {
   if (e.getAttribute('real') === e.getAttribute('pos') && Number(e.getAttribute('side')) === 0) {
@@ -299,7 +315,7 @@ function createCell(realX, realY, x, y, side=0) {
   // if the cell doesn't exist, create a new one
   if (!exists) {
     e.className = 'cell';
-    e.style.backgroundPosition = `${-realX*60}px ${-realY*60}px`;
+    e.style.backgroundPosition = `${-realX*setup.size}px ${-realY*setup.size}px`;
     e.setAttribute('real', realX+','+realY);
     e.onclick="";
     $('.grid').appendChild(e);
@@ -320,20 +336,25 @@ function posToIndex(pos) {
 }
 
 // set game size settings
-function gameSetup(width, height, sides, side) {
+function gameSetup(width, height, sides, side, size) {
   setup.width = width;
   setup.height = height;
+  setup.size = size;
   const numSides = sides.length;
   setup.sides = numSides;
 
   const cellStyle = $('#cellSetup');
 
-  $('.grid').setAttribute('side', side);
+  $('.grid-container').setAttribute('side', side);
   $('#side').innerText = (side+1) + '/' + numSides;
 
-  const cellSize = 60;
+  const cellSize = size;
   const previewScale = 8;
   const largeScale = 30;
+  const previewWidth = 256;
+  const previewHeight = previewWidth*(height/width);
+  const largeWidth = 960;
+  const largeHeight = largeWidth*(height/width);
 
   cellStyle.innerHTML = `
   .grid {
@@ -343,44 +364,36 @@ function gameSetup(width, height, sides, side) {
     grid-template-rows: repeat(${height}, ${cellSize}px);
   }
   .preview-container {
-    width: ${previewScale * width}px;
-    height: ${previewScale * height}px;
+    width: ${previewWidth}px;
+    height: ${previewHeight}px;
   }
   .preview {
-    width: ${previewScale * width}px;
-    height: ${previewScale * height}px;
-    background-size: ${previewScale * width}px ${previewScale * height}px;
+    width: ${previewWidth}px;
+    height: ${previewHeight}px;
+    background-size: ${previewWidth}px ${previewHeight}px;
   }
   .preview:hover {
-    width: ${largeScale * width}px;
-    height: ${largeScale * height}px;
-    background-size: ${largeScale * width}px ${largeScale * height}px;
+    width: ${largeWidth}px;
+    height: ${largeHeight}px;
+    background-size: ${largeWidth}px ${largeHeight}px;
   }
   .cell {
     background-size: ${cellSize * width}px ${cellSize * height}px;
   }
-  .complete .cell {
-    background-image: none !important;
-    background-color: red;
-  }
-  .complete .cell.set {
-    background-color: #4f4;
-  }
-
   ${Array.from({length: numSides}).map((_, i) => `
-    .grid[side="${i}"] + .info .preview {
+    .grid-container[side="${i}"] .grid, .grid-container[side="${i}"] + .info .preview {
       background-image: url(${sides[i]});
     }
     ` +
     Array.from({length: numSides}).map((_, j) => `
-    .grid[side="${i}"] .cell[side="${j}"] {
+    .grid-container[side="${i}"] .cell[side="${j}"] {
       background-image: url(${sides[(i + j) % numSides]});
     }
   `).join('\n')).join('\n')}
   `;
 }
 
-socket.on('setup', ({width, height, sides, side}) => gameSetup(width, height, sides, side));
+socket.on('setup', ({width, height, sides, side, size}) => gameSetup(width, height, sides, side, size));
 socket.on('info', info => {
   $('#helpers').innerText = info.helpers;
   $('#moves').innerText = info.moves;

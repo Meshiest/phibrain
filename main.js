@@ -12,22 +12,30 @@ const HEIGHT_1080 = 18;
 const WIDTH_2160 = 64;
 const HEIGHT_2160 = 36;
 
-const PIECE_SIZE = 60;
 
 /*const SIDES = [
   '/puzzles/rainbow.png',
 ];
+const PIECE_SIZE = 60;
 const [WIDTH, HEIGHT] = [2520/PIECE_SIZE, 1860/PIECE_SIZE];*/
 
 /*const SIDES = [
   'https://w.wallhaven.cc/full/47/wallhaven-476z1v.jpg',
 ];
+const PIECE_SIZE = 60;
 const [WIDTH, HEIGHT] = [1920/PIECE_SIZE, 1080/PIECE_SIZE];
 */
-const SIDES = [
+/*const SIDES = [
   'https://w.wallhaven.cc/full/lq/wallhaven-lq9w5r.jpg',
 ];
-const [WIDTH, HEIGHT] = [1920/PIECE_SIZE, 1200/PIECE_SIZE];
+const PIECE_SIZE = 60;
+const [WIDTH, HEIGHT] = [1920/PIECE_SIZE, 1200/PIECE_SIZE];*/
+
+const SIDES = [
+  'https://w.wallhaven.cc/full/wy/wallhaven-wyv9qx.jpg',
+];
+const PIECE_SIZE = 160;
+const [WIDTH, HEIGHT] = [2560/PIECE_SIZE, 1440/PIECE_SIZE];
 
 
 // this set is made up of multiple photos that complement useless space
@@ -79,6 +87,7 @@ io.on('connection', socket => {
   socket.emit('setup', {
     width: WIDTH,
     height: HEIGHT,
+    size: PIECE_SIZE,
     sides: SIDES,
     side: _.random(NUM_SIDES - 1),
   });

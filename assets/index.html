@@ -23,7 +23,11 @@ See /app.js for some documented helper functions if you're interested in writing
 
 -->
 <style id="cellSetup"></style>
-<div class="grid"></div>
+<div class="grid-container">
+  <div class="grid-child">
+    <div class="grid"></div>
+  </div>
+</div>
 <div class="info">
   <div class="preview-container">
     <div class="preview"></div>
@@ -37,9 +41,14 @@ See /app.js for some documented helper functions if you're interested in writing
       <tr><td>Helpers</td><td id="helpers"></td></tr>
       <tr><td>Side</td><td id="side"></td></tr>
       <tr><td>Moves</td><td id="moves"></td></tr>
+      <tr><td>Zoom</td><td>
+        <a href="#" id="zoomMinus">[-]</a>
+        <span id="zoom">100%</span>
+        <a href="#" id="zoomPlus">[+]</a>
+      </td></tr>
     </table>
-    <div>
-      <h3>Keys</h3>
+    <div id="keys">
+      <h3>Keys <a class='toggle on' href="#keys">[show]</a><a class='toggle off'  href="#">[hide]</a></h3>
       <table class="keys">
         <tr><td>X/Esc</td><td>Deselect Selected</td></tr>
         <tr><td>WASD</td><td>Move Selected</td></tr>
@@ -56,7 +65,14 @@ See /app.js for some documented helper functions if you're interested in writing
         </div>
       </div>
       <form id="chatForm">
-        <input name="msg" id="chatInput" type="text" placeholder="chat message"></div>
+        <input
+          name="msg"
+          id="chatInput"
+          type="text"
+          placeholder="chat message"
+          autocomplete="off"
+        >
+        </div>
       </form>
     </div>
   </div>

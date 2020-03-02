@@ -1,5 +1,5 @@
 html, body {
-margin: 0;
+  margin: 0;
   padding: 0;
   touch-action: manipulation;
 }
@@ -10,10 +10,27 @@ margin: 0;
 
 body {
   display: flex;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+.grid-container {
+  position: relative;
+  flex: 1;
+}
+
+.grid-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 
 .grid {
   flex-shrink: 0;
+  background-repeat: no-repeat;
   display: grid;
   overflow: hidden;
 }
@@ -37,6 +54,7 @@ table.just tr td:first-child {
 .info {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .info-table {
@@ -44,6 +62,7 @@ table.just tr td:first-child {
   flex: 1;
   flex-direction: column;
   padding: 14px;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .progress {
@@ -56,6 +75,7 @@ table.just tr td:first-child {
 
 .preview-container {
   position: relative;
+  z-index: 1;
 }
 
 .preview {
@@ -68,6 +88,15 @@ table.just tr td:first-child {
 .cell {
   background-repeat: no-repeat;
   transition: transform .1s ease;
+}
+
+.complete .cell {
+  background-image: none !important;
+  background-color: red;
+}
+
+.complete .cell.set {
+  background-color: #4f4;
 }
 
 .cell.focused {
@@ -95,17 +124,17 @@ h1 {
   text-align: center;
 }
 
+
 .set {
   animation: glow 1s ease;
 }
 @keyframes glow {
   to {
-    opacity: 1;
-    background-color: #4f4;
+    background-color: transparent;
   }
   from {
-    opacity: 0;
-    background-color: #4f4;
+    background-image: none;
+    background-color: #fff;
   }
 }
 
@@ -117,7 +146,10 @@ h1 {
 
 .chat-parent {
   flex: 1;
+  min-height: 50px;
   position: relative;
+  background-color: #f5f5f5;
+  margin-bottom: 14px;
 }
 
 .chat-child {
@@ -127,8 +159,26 @@ h1 {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  padding: 7px;
+  box-sizing: border-box;
+}
+
+#keys:target .toggle.on {
+  display: none;
+}
+#keys:not(:target) .toggle.off, #keys:not(:target) .keys {
+  display: none;
 }
 
 .chat-child span {
   word-break: break-all;
+}
+
+#chatForm {
+  display: flex;
+}
+
+#chatForm input {
+  flex: 1;
+  padding: 4px;
 }
