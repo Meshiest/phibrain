@@ -5,6 +5,7 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   <script src="/socket.io/socket.io.js"></script>
   <script src="/app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=0.5, user-scalable=no">
 </head>
 <body>
 <!--
@@ -21,8 +22,12 @@ If you're interested in writing your own, please ignore this code and make your 
 
 See /app.js for some documented helper functions if you're interested in writing your own bots!
 
+auto flip every tile to the correct side
+(f=()=>{c=$('.cell:not([side="0"])');if(!c)return;socket.emit('flip',indexFromCell(c),0);setTimeout(f,50)})();
+
 -->
 <style id="cellSetup"></style>
+<style id="focusStyle"></style>
 <div class="grid-container">
   <div class="grid-child">
     <div class="grid"></div>
@@ -39,7 +44,11 @@ See /app.js for some documented helper functions if you're interested in writing
     <table class="just">
       <tr><td>Progress</td><td id="progressInfo"></td></tr>
       <tr><td>Helpers</td><td id="helpers"></td></tr>
-      <tr><td>Side</td><td id="side"></td></tr>
+      <tr><td>Side</td><td>
+        <a href="#" id="sideMinus">[-]</a>
+        <span id="side"></span>
+        <a href="#" id="sidePlus">[+]</a>
+      </td></tr>
       <tr><td>Moves</td><td id="moves"></td></tr>
       <tr><td>Zoom</td><td>
         <a href="#" id="zoomMinus">[-]</a>
@@ -48,7 +57,7 @@ See /app.js for some documented helper functions if you're interested in writing
       </td></tr>
     </table>
     <div id="keys">
-      <h3>Keys <a class='toggle on' href="#keys">[show]</a><a class='toggle off'  href="#">[hide]</a></h3>
+      <h3>Keys <a class="toggle on" href="#keys">[show]</a><a class="toggle off"  href="#">[hide]</a></h3>
       <table class="keys">
         <tr><td>X/Esc</td><td>Deselect Selected</td></tr>
         <tr><td>WASD</td><td>Move Selected</td></tr>

@@ -3,6 +3,9 @@ const socket = io();
 const $ = document.querySelector.bind(document);
 const timers = {};
 const setup = {};
+const otherFocused = {};
+let cellSize = 60;
+let myFocus = null;
 
 const clickSound = new Audio('snap.mp3');
 clickSound.volume = 0.2;
@@ -15,6 +18,13 @@ function playClickSound() {
   // allows the sound to be played quickly in succession
   clickSound.currentTime = 0;
   clickSound.play();
+}
+
+function modSide(back) {
+  $('.grid-container').setAttribute('side',
+    (Number($('.grid-container').getAttribute('side')) + (back ? setup.sides - 1 : 1)) % setup.sides,
+  );
+  $('#side').innerText = (Number($('.grid-container').getAttribute('side')) + 1) + '/' + setup.sides;
 }
 
 document.addEventListener('keyup', e => {
@@ -83,10 +93,7 @@ document.addEventListener('keydown', e => {
   switch(e.code) {
   case 'Space':
     e.preventDefault();
-    $('.grid-container').setAttribute('side',
-      (Number($('.grid-container').getAttribute('side')) + (e.shiftKey ? setup.sides - 1 : 1)) % setup.sides,
-    );
-    $('#side').innerText = (Number($('.grid-container').getAttribute('side')) + 1) + '/' + setup.sides;
+    modSide(e.shiftKey);
     break;
 
   // show complete pieces
@@ -227,8 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setup.zoom = ((setup.zoom || 100) + 80) % 100 + 10;
     $('#zoom').innerText = setup.zoom + '%';
     $('.grid-container').style.zoom = setup.zoom + '%';
-  })
+  });
+
+  document.body.style.height = window.innerHeight + 'px';
+
+  $('#sidePlus').addEventListener('click', e => modSide(false))
+  $('#sideMinus').addEventListener('click', e => modSide(true))
 });
+
+window.addEventListener('resize', () => document.body.style.height = window.innerHeight + 'px');
 
 // check if a cell is set
 function checkSet(e) {
@@ -335,6 +349,15 @@ function posToIndex(pos) {
   return pos[0] + pos[1] * setup.width;
 }
 
+setInterval(() => {
+  const focused = $('.cell.focused');
+  const realFocused = focused ? focused.getAttribute('real') : null;
+  if (realFocused !== myFocus) {
+    myFocus = realFocused;
+    socket.emit('focus', myFocus);
+  }
+}, 500);
+
 // set game size settings
 function gameSetup(width, height, sides, side, size) {
   setup.width = width;
@@ -344,11 +367,12 @@ function gameSetup(width, height, sides, side, size) {
   setup.sides = numSides;
 
   const cellStyle = $('#cellSetup');
+  const focusStyle = $('#focusStyle');
 
   $('.grid-container').setAttribute('side', side);
   $('#side').innerText = (side+1) + '/' + numSides;
 
-  const cellSize = size;
+  cellSize = size;
   const previewScale = 8;
   const largeScale = 30;
   const previewWidth = 256;
@@ -425,12 +449,57 @@ socket.on('chat', (id, chat) => {
   $('.chat-child').scrollTop = $('.chat-child').scrollHeight;
 });
 
+socket.on('focus', (id, cell) => {
+  otherFocused[id] = cell;
+  focusStyle.innerHTML = `
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 ${cellSize/2}px rgba(255, 255, 255, 0.8) inset;
+    }
+    100% {
+      box-shadow: 0 0 ${cellSize/2}px rgba(255, 255, 255, 0.2) inset;
+    }
+  }
+  ` + Object.entries(otherFocused).filter(([_, cell]) => cell).map(([id, cell]) =>
+    `
+    .cell[real="${cell}"]::before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      animation: pulse 1s linear infinite alternate;
+    }
+    .cell[real="${cell}"]::after {
+      content: '';
+      display: block;
+      transform: translate(${cellSize - 20}px, ${cellSize - 20}px);
+      background: white;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 2px #777;
+    }
+    .cell[real="${cell}"]:hover::after {
+      content: '${id}';
+      width: auto;
+      color: #444;
+      height: 20px;
+      text-align: center;
+    }
+    `
+  ).join('');
+});
+
 socket.on('join', id => {
   const m = document.createElement('div');
   const b = document.createElement('strong');
   b.innerText = `${id} `;
   const c = document.createElement('span');
   c.innerText = 'connected';
+  otherFocused[id] = null;
   m.appendChild(b);
   m.appendChild(c);
   $('.chat-child').appendChild(m);
@@ -445,6 +514,7 @@ socket.on('drop', id => {
   c.innerText = 'disconnected';
   m.appendChild(b);
   m.appendChild(c);
+  otherFocused[id] = null;
   $('.chat-child').appendChild(m);
   $('.chat-child').scrollTop = $('.chat-child').scrollHeight;
 });
